@@ -1,2 +1,2 @@
 build:
-	go build ./cmd/ratelimiter/main.go
+	go build ./ratelimiter.go
