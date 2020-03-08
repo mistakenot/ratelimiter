@@ -1,6 +1,7 @@
 provider "google" {
   project     = "${var.project_id}"
   region      = "${var.region}"
+  version     = "~> 3.11"
 }
 
 resource "google_redis_instance" "ratelimiter_redis" {

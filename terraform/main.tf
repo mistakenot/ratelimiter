@@ -1,11 +1,12 @@
 terraform {
   backend "gcs" {
-    bucket  = "${var.project_id}-ratelimiter-terraform"
+      # Config is passed in when the init command is called.
   }
 }
 
 module "ratelimiter" {
     source = "./ratelimiter"
-    project = "${var.project_id}"
+    project_id = "${var.project_id}"
     region = "us-central1"
+    image = "gcr.io/${var.project_id}/ratelimiter:latest"
 }

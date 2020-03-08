@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script will bootstrap the initial GCP resources required to use this repository and terraform.
+# Idempotent script to bootstrap the initial GCP resources required to use this repository and terraform.
 
 set -e
 
@@ -34,16 +34,16 @@ gcloud projects describe "$TF_VAR_project_id" > /dev/null || {
 }
 
 # This script should be run from the root of the directory.
-ls ./makefile > /dev/null 2>&1 || {
+test -f ./makefile || {
     echo "Run this script from the root of the directory."
     exit 1
 }
 
-TERRAFORM_BUCKET="gs://$TF_VAR_project_id-ratelimiter-terraform"
+TERRAFORM_BUCKET="$TF_VAR_project_id-ratelimiter-terraform"
 
 # A bucket is required for terraform state.
-gsutil ls "$TERRAFORM_BUCKET" > /dev/null 2>&1 || {
-    gsutil mb "$TERRAFORM_BUCKET"
+gsutil ls "gs://$TERRAFORM_BUCKET" > /dev/null 2>&1 || {
+    gsutil mb "gs://$TERRAFORM_BUCKET"
 }
 
 RATELIMITER_REPO="ratelimiter"
@@ -54,4 +54,9 @@ gcloud source repos describe "$RATELIMITER_REPO" > /dev/null 2>&1 || {
     git config --global credential.'https://source.developers.google.com'.helper gcloud.sh
     git remote add google "https://source.developers.google.com/p/$TF_VAR_project_id/r/$RATELIMITER_REPO"
     echo "Push to the repository when you are ready with 'git push google master'. This will trigger a build of the image."
+}
+
+# And finally, init terraform
+test -d ./.terraform || {
+    terraform init -backend-config=bucket="$TERRAFORM_BUCKET" ./terraform
 }
