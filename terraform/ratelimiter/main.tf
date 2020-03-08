@@ -18,7 +18,7 @@ resource "google_cloud_run_service" "ratelimiter_run" {
     spec {
       containers {
         image = "${var.image}"
-        args = [
+        command = [
             "ratelimiter", "start", 
             "--max-requests-in-period", "${var.max_requests_in_period}", 
             "--period-duration-seconds", "${var.period_duration_seconds}",
