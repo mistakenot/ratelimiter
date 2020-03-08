@@ -20,3 +20,8 @@ The service exposes a REST api described in the [Openapi](./api/openapi.yaml) do
 - `make test` runs unit tests. Note that this requires an instance of Redis 4 to be running locally.
 - `make up` starts a full local environment with docker-compose.
 - `make deploy` runs the cloud init and deployment scripts, powered by Terraform.
+
+# Issues
+
+- There are a few `TODO`'s in the code base for small code improvements.
+- Cloud Run managed clusters can't connect to private VPC IP addresses.
