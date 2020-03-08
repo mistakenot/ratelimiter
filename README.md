@@ -23,5 +23,5 @@ The service exposes a REST api described in the [Openapi](./api/openapi.yaml) do
 
 # Todo
 
-- There are a few `TODO`'s in the code base for small code improvements.
+- There are a few `TODO`'s in the code base for small code improvements. (`grep -r TODO .`)
 - Functions are deploy to public endpoints, without IAM authentication.

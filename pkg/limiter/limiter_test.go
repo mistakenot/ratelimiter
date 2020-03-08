@@ -48,7 +48,7 @@ func TestTakeTokenFreshKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	// TODO this isn't ideal as it relies on the clock and will be unstable.
+	// TODO this isn't ideal as it relies on the clock and could be unstable.
 	for i := 1; i < 6; i++ {
 		result, err := limiter.TakeToken(key)
 

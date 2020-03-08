@@ -77,7 +77,6 @@ func (r *redisLimiter) TakeToken(userId string) (RateLimiterResult, error) {
 		return RateLimiterResult{}, err
 	}
 
-	// TODO overflow risk
 	ticketsRemaining := r.config.MaxRequestsInPeriod - int(incr.Val())
 	secondsToReset := int(bucketEnd - now)
 
