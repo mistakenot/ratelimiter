@@ -20,8 +20,8 @@ type RateLimiterConfig struct {
 }
 
 type RateLimiterResult struct {
-	TicketsRemaining int `json:"ticketsRemaining"`
-	SecondsToReset   int `json:"secondsToReset"`
+	RequestsRemaining int `json:"requestsRemaining"`
+	SecondsToReset    int `json:"secondsToReset"`
 }
 
 func Create(config RateLimiterConfig) (RateLimiter, error) {
@@ -78,14 +78,14 @@ func (r *redisLimiter) TakeToken(userId string) (RateLimiterResult, error) {
 	}
 
 	// TODO overflow risk
-	TicketsRemaining := r.config.MaxRequestsInPeriod - int(incr.Val())
-	SecondsToReset := int(bucketEnd - now)
+	ticketsRemaining := r.config.MaxRequestsInPeriod - int(incr.Val())
+	secondsToReset := int(bucketEnd - now)
 
-	if TicketsRemaining < 0 {
-		TicketsRemaining = 0
+	if ticketsRemaining < 0 {
+		ticketsRemaining = 0
 	}
 
-	return RateLimiterResult{TicketsRemaining, SecondsToReset}, nil
+	return RateLimiterResult{ticketsRemaining, secondsToReset}, nil
 }
 
 func (r *redisLimiter) Close() error {

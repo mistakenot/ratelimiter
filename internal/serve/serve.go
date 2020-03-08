@@ -18,7 +18,6 @@ func Serve(limiter limiter.RateLimiter, port int) error {
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -27,24 +26,23 @@ func Serve(limiter limiter.RateLimiter, port int) error {
 
 	// Index and healthcheck url
 	r.HandleFunc("/", indexHandler)
-	r.HandleFunc("/zhealth", indexHandler)
+	r.HandleFunc("/healthz", indexHandler)
 
 	// Rate limit url
-	r.HandleFunc("/token/{userId}", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/token/{tokenId}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		userId := vars["userId"]
+		tokenId := vars["tokenId"]
 
-		if userId == "" {
+		if tokenId == "" {
 			w.WriteHeader(404)
 			return
 		}
 
-		result, err := limiter.TakeToken(userId)
+		result, err := limiter.TakeToken(tokenId)
 
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -53,7 +51,6 @@ func Serve(limiter limiter.RateLimiter, port int) error {
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
 			return
 		}
 	})

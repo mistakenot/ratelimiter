@@ -1,5 +1,5 @@
 build:
-	go build ./ratelimiter.go
+	go build ./main.go
 
 test:
 	go test ./pkg/limiter

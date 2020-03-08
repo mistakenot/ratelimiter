@@ -56,8 +56,8 @@ func TestTakeTokenFreshKey(t *testing.T) {
 			t.Error(err)
 		}
 
-		if result.TicketsRemaining != (5 - i) {
-			t.Errorf("Expected %v, got %v", (5 - i), result.TicketsRemaining)
+		if result.RequestsRemaining != (5 - i) {
+			t.Errorf("Expected %v, got %v", (5 - i), result.RequestsRemaining)
 		}
 
 		if result.SecondsToReset > 1000 || result.SecondsToReset < 0 {
@@ -73,8 +73,8 @@ func TestTakeTokenFreshKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	if result.TicketsRemaining != 0 {
-		t.Errorf("Expected %v, got %v", 0, result.TicketsRemaining)
+	if result.RequestsRemaining != 0 {
+		t.Errorf("Expected %v, got %v", 0, result.RequestsRemaining)
 	}
 }
 
@@ -93,8 +93,8 @@ func TestTakeTokenFreshKeyAfterExhaustion(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if result.TicketsRemaining != 1 {
-		t.Errorf("Expected %v, got %v", 1, result.TicketsRemaining)
+	if result.RequestsRemaining != 1 {
+		t.Errorf("Expected %v, got %v", 1, result.RequestsRemaining)
 	}
 
 	// Take the second token
@@ -103,8 +103,8 @@ func TestTakeTokenFreshKeyAfterExhaustion(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if result.TicketsRemaining != 0 {
-		t.Errorf("Expected %v, got %v", 0, result.TicketsRemaining)
+	if result.RequestsRemaining != 0 {
+		t.Errorf("Expected %v, got %v", 0, result.RequestsRemaining)
 	}
 
 	// Wait for reset.
@@ -117,7 +117,7 @@ func TestTakeTokenFreshKeyAfterExhaustion(t *testing.T) {
 		t.Error(err)
 	}
 
-	if result.TicketsRemaining != 1 {
-		t.Errorf("Expected %v, got %v", 1, result.TicketsRemaining)
+	if result.RequestsRemaining != 1 {
+		t.Errorf("Expected %v, got %v", 1, result.RequestsRemaining)
 	}
 }
