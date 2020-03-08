@@ -1,3 +1,5 @@
+export TF_VAR_project_id ?= dd-dev-exam
+
 build:
 	go build ./main.go
 
@@ -11,3 +13,6 @@ test-full: test
 up:
 	docker-commpose down && \
 	docker-compose up -d
+
+deploy:
+	bash ./terraform/bootstrap.sh && bash ./terraform/deploy.sh

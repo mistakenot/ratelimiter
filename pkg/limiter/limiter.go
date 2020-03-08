@@ -49,7 +49,7 @@ func Create(config RateLimiterConfig) (RateLimiter, error) {
 	return &redisLimiter{client, config}, nil
 }
 
-func CalculateCurrentBucketStartAndEnd(now int64, bucketSizeSeconds int64) (int64, int64) {
+func calculateCurrentBucketStartAndEnd(now int64, bucketSizeSeconds int64) (int64, int64) {
 	bucketStart := now - (now % bucketSizeSeconds)
 	bucketEnd := bucketStart + bucketSizeSeconds
 
@@ -64,7 +64,7 @@ type redisLimiter struct {
 func (r *redisLimiter) TakeToken(userId string) (RateLimiterResult, error) {
 	// TODO what issues could this cause?
 	now := time.Now().Unix()
-	bucketStart, bucketEnd := CalculateCurrentBucketStartAndEnd(now, int64(r.config.PeriodDurationSeconds))
+	bucketStart, bucketEnd := calculateCurrentBucketStartAndEnd(now, int64(r.config.PeriodDurationSeconds))
 	key := fmt.Sprintf("%v:%v", userId, bucketStart)
 	expires := time.Duration(bucketEnd-now) * time.Second
 

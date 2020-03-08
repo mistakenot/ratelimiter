@@ -24,7 +24,7 @@ func TestCreateFailsWithInvalidArgs(t *testing.T) {
 
 func TestCalculateBucketStats(t *testing.T) {
 	now := time.Now().Unix()
-	bucketStart, bucketEnd := CalculateCurrentBucketStartAndEnd(now, 10)
+	bucketStart, bucketEnd := calculateCurrentBucketStartAndEnd(now, 10)
 	expectedBucketStart := now - (now % 10)
 	expectedBucketEnd := expectedBucketStart + 10
 
