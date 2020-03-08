@@ -59,7 +59,7 @@ gcloud source repos describe "$RATELIMITER_REPO" > /dev/null 2>&1 || {
 # And a trigger
 gcloud beta builds triggers describe "$RATELIMITER_REPO" > /dev/null 2>&1 || {
     gcloud beta builds triggers create cloud-source-repositories \
-        --build-config ./cloudbuild.yaml \
+        --build-config cloudbuild.yaml \
         --repo "$RATELIMITER_REPO" \
         --description "$RATELIMITER_REPO" \
         --branch-pattern ".*"
