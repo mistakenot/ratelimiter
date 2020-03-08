@@ -2,8 +2,9 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/ratelimiter:$SHORT_SHA', '.' ]
 - name: 'gcr.io/dd-dev-exam/terraform:0.12.20'
-  args: ['terraform', 'apply','./terraform']
+  args: ['apply','./terraform']
   env:
     - TF_VAR_project_id=$PROJECT_ID
+    - TF_VAR_image_version=$SHORT_SHA
 images:
 - 'gcr.io/$PROJECT_ID/ratelimiter:$SHORT_SHA'
