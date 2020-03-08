@@ -18,8 +18,9 @@ resource "google_cloud_run_service" "ratelimiter_run" {
     spec {
       containers {
         image = "${var.image}"
-        command = [
-            "ratelimiter", "start", 
+        command = ["ratelimiter"]
+        args = [
+            "start", 
             "--max-requests-in-period", "${var.max_requests_in_period}", 
             "--period-duration-seconds", "${var.period_duration_seconds}",
             "--redis-url", "${google_redis_instance.ratelimiter_redis.host}:${google_redis_instance.ratelimiter_redis.port}"]
