@@ -13,5 +13,6 @@ steps:
   env:
     - TF_VAR_project_id=$PROJECT_ID
     - TF_VAR_image_version=$SHORT_SHA
+    - TF_VAR_source_repo_sha=$COMMIT_SHA
 images:
 - 'gcr.io/$PROJECT_ID/ratelimiter:$SHORT_SHA'

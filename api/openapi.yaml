@@ -1,0 +1,42 @@
+swagger: '2.0'
+info:
+  title: Ratelimiter
+  description: A simple, distributed rate limiter service built with Go, Redis, Terraform and GCP.
+  version: 1.0.0
+host: api.example.com
+paths:
+  /:
+    get:
+      summary: Index.
+      operationId: index
+      responses:
+        '200':
+          description: A successful response
+  /healthz:
+    get:
+      summary: Healthcheck frequently used with containers.
+      operationId: healthz
+      responses:
+        '200':
+          description: A successful response
+  /token/{tokenId}:
+    get:
+      summary: Retrieves the requests remaining for this token, decrements the request count by one.
+      operationId: token
+      parameters:
+        - in: path
+          name: tokenId
+          required: true
+          type: string
+          minimum: 1
+          description: Token ID.
+      responses:
+        '200':
+          description: Remaining tickets and time until next window refresh.
+          schema:
+            type: object
+            properties:
+              requestsRemaining:
+                type: integer
+              secondsToReset:
+                type: integer

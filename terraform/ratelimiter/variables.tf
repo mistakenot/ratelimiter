@@ -9,17 +9,17 @@ variable "region" {
     default = "us-central1"
 }
 
-variable "image" {
-    type = "string"
-    description = "Ratelimiter full docker tag."
-}
-
 variable "max_requests_in_period" {
     description = "Max requests the limiter will accept from a single id, for each time window."
-    default = 10
+    default = 20
 }
 
 variable "period_duration_seconds" {
     description = "Length of time in seconds before the limiter resets an id's request count."
-    default = 1
+    default = 10
+}
+
+variable "source_repo_sha" {
+    type = "string"
+    description = "Commit hash to deploy."
 }

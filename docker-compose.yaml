@@ -3,7 +3,8 @@ services:
   api:
     build: .
     ports:
-      - "5000:5000"
+      - "8080:8080"
+    command: ["ratelimiter", "start", "--max-requests-in-period", "20", "--period-duration-seconds", "10", "--redis-url", "redis:6379"]
   redis:
     ports:
       - "6379:6379"

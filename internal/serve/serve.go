@@ -10,6 +10,14 @@ import (
 )
 
 func Serve(limiter limiter.RateLimiter, port int) error {
+	addr := fmt.Sprintf(":%v", port)
+	fmt.Printf("Listening on %v\n", addr)
+
+	defer limiter.Close()
+	return http.ListenAndServe(addr, CreateHandler(limiter))
+}
+
+func CreateHandler(limiter limiter.RateLimiter) http.Handler {
 	r := mux.NewRouter()
 
 	indexHandler := func(w http.ResponseWriter, r *http.Request) {
@@ -55,14 +63,5 @@ func Serve(limiter limiter.RateLimiter, port int) error {
 		}
 	})
 
-	addr := fmt.Sprintf(":%v", port)
-
-	fmt.Printf("Listening on %v\n", addr)
-
-	// TODO is this the best place to put this?
-	// Makes sense to link its lifetime with the
-	//  lifetime of the server.
-	defer limiter.Close()
-
-	return http.ListenAndServe(addr, r)
+	return r
 }

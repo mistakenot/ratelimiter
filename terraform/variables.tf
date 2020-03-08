@@ -9,8 +9,7 @@ variable "region" {
     default = "us-central1"
 }
 
-variable "image_version" {
+variable "source_repo_sha" {
     type = "string"
-    description = "The version of the service image. Defaults to latest."
-    default = "latest"
+    description = "Commit hash to deploy."
 }

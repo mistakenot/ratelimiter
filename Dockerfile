@@ -4,7 +4,7 @@ WORKDIR /app
 
 ADD . .
 
-RUN go build main.go
+RUN go build ./bin/main.go
 
 RUN mv ./main /usr/bin/ratelimiter && chmod +x /usr/bin/ratelimiter
 

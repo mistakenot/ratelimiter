@@ -31,7 +31,7 @@ func Create(config RateLimiterConfig) (RateLimiter, error) {
 	}
 
 	if config.PeriodDurationSeconds < 1 {
-		return nil, fmt.Errorf("Config value PeriodDurationSeconds must be greater than 1, got %v", config.MaxRequestsInPeriod)
+		return nil, fmt.Errorf("Config value PeriodDurationSeconds must be greater than 1, got %v", config.PeriodDurationSeconds)
 	}
 
 	client := redis.NewClient(&redis.Options{

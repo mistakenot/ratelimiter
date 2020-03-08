@@ -55,7 +55,12 @@ var startCommand = &cobra.Command{
 			os.Exit(1)
 		}
 
-		config := limiter.RateLimiterConfig{maxRequestsInPeriod, periodDurationInSeconds, redisUrl}
+		config := limiter.RateLimiterConfig{
+			MaxRequestsInPeriod:   maxRequestsInPeriod,
+			PeriodDurationSeconds: periodDurationInSeconds,
+			RedisConnectionString: redisUrl,
+		}
+
 		limiter, err := limiter.Create(config)
 
 		if err != nil {

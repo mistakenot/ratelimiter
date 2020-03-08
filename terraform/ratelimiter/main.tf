@@ -10,25 +10,37 @@ resource "google_redis_instance" "ratelimiter_redis" {
   memory_size_gb = 1
 }
 
-resource "google_cloud_run_service" "ratelimiter_run" {
-  name     = "ratelimiter-run"
-  location = "${var.region}"
+# Required to access Redis
+resource "google_vpc_access_connector" "connector" {
+  name          = "ratelimiter"
+  region        = "${var.region}"
+  ip_cidr_range = "10.8.0.0/28"
+  network       = "default"
+}
 
-  template {
-    spec {
-      containers {
-        image = "${var.image}"
-        command = ["ratelimiter"]
-        args = [
-            "start", 
-            "--max-requests-in-period", "${var.max_requests_in_period}", 
-            "--period-duration-seconds", "${var.period_duration_seconds}",
-            "--redis-url", "${google_redis_instance.ratelimiter_redis.host}:${google_redis_instance.ratelimiter_redis.port}"]
-      }
-    }
+resource "google_cloudfunctions_function" "ratelimiter" {
+  name        = "ratelimiter"
+  description = "Ratelimiter service."
+  runtime     = "go113"
+  entry_point = "Index"
+  trigger_http = true
+  source_repository {
+    url =   "https://source.developers.google.com/projects/${var.project_id}/repos/ratelimiter/revisions/${var.source_repo_sha}"
   }
-  traffic {
-    percent         = 100
-    latest_revision = true
+
+  vpc_connector = "projects/${var.project_id}/locations/${var.region}/connectors/${google_vpc_access_connector.connector.name}"
+
+  environment_variables = {
+    REDIS_URL = "${google_redis_instance.ratelimiter_redis.host}:${google_redis_instance.ratelimiter_redis.port}"
+    MAX_REQUESTS_IN_PERIOD = "${var.max_requests_in_period}"
+    PERIOD_DURATION_IN_SECONDS = "${var.period_duration_seconds}"
   }
+}
+
+# TODO Public access. 
+resource "google_cloudfunctions_function_iam_member" "invoker" {
+  region         = "${var.region}"
+  cloud_function = "${google_cloudfunctions_function.ratelimiter.name}"
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers"
 }
