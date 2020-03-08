@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mistakenot/ratelimiter/internal"
+	"github.com/mistakenot/ratelimiter/internal/serve"
+	"github.com/mistakenot/ratelimiter/pkg/limiter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -30,7 +31,15 @@ var startCommand = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if err := internal.Serve(port); err != nil {
+		config := limiter.RateLimiterConfig{5, 10, ""}
+		limiter, err := limiter.Create(config)
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		if err := serve.Serve(limiter, port); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
