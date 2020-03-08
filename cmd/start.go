@@ -72,6 +72,8 @@ var startCommand = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(startCommand)
+	viper.AutomaticEnv()
+
 	startCommand.Flags().IntP("port", "p", viper.GetInt("PORT"), "Port to listen on. [defaults to 8080]")
 	startCommand.Flags().StringP("redis-url", "r", viper.GetString("REDIS_URL"), "Redis instance connection url. [defaults to localhost:6379]")
 	startCommand.Flags().Int("max-requests-in-period", viper.GetInt("MAX_REQUESTS_IN_PERIOD"), "Max number of requests in each period, per user.")

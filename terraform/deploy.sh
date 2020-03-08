@@ -4,7 +4,7 @@
 
 set -e
 
-# Required terraform.
+# Requires terraform.
 which terraform > /dev/null || {
     echo "Ensure you have the terraform tool installed."
     exit 1

@@ -6,6 +6,7 @@ provider "google" {
 
 resource "google_redis_instance" "ratelimiter_redis" {
   name           = "ratelimiter-redis"
+  region         = "${var.region}"
   memory_size_gb = 1
 }
 

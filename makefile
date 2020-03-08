@@ -3,15 +3,13 @@ export TF_VAR_project_id ?= dd-dev-exam
 build:
 	go build ./main.go
 
+# These tests require a redis instance to be running locally.
 test:
+	go test ./internal/redis && \
 	go test ./pkg/limiter
 
-# These tests require a redis instance to be running locally.
-test-full: test
-	go test ./internal/redis
-
 up:
-	docker-commpose down && \
+	docker-compose down && \
 	docker-compose up -d
 
 deploy:
