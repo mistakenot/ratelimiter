@@ -1,5 +1,10 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/ratelimiter', '.' ]
+- name: 'gcr.io/dd-dev-exam/terraform:0.12.20'
+  entrypoint: '/usr/bin/bash'
+  args: ['./terraform/deploy.sh']
+  env:
+    - TF_VAR_project_id=$PROJECT_ID
 images:
 - 'gcr.io/$PROJECT_ID/ratelimiter'
