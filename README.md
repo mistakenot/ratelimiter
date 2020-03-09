@@ -2,6 +2,8 @@
 
 A simple, distributed rate limiter service built with Go, Redis, Terraform and GCP.
 
+Currently deployed to [here](https://us-central1-dd-dev-exam.cloudfunctions.net/ratelimiter/).
+
 # Usage
 
 The service exposes a REST api described in the [Openapi](./api/openapi.yaml) document. It exposes the following endpoints:

@@ -49,6 +49,8 @@ func TestTakeTokenFreshKey(t *testing.T) {
 	}
 
 	// TODO this isn't ideal as it relies on the clock and could be unstable.
+	// Possible way to resolve would be to inject a "GetTime" service of some sort
+	//  so that you can predictably set it for testing. Out of scope at the mo.
 	for i := 1; i < 6; i++ {
 		result, err := limiter.TakeToken(key)
 
@@ -60,7 +62,7 @@ func TestTakeTokenFreshKey(t *testing.T) {
 			t.Errorf("Expected %v, got %v", (5 - i), result.RequestsRemaining)
 		}
 
-		if result.SecondsToReset > 1000 || result.SecondsToReset < 0 {
+		if result.SecondsToReset > 100 || result.SecondsToReset < 0 {
 			// TODO this could be better asserted.
 			t.Errorf("SecondsToReset is invalid: %v", result.SecondsToReset)
 		}

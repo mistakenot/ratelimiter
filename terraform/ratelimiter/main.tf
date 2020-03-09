@@ -28,6 +28,8 @@ resource "google_cloudfunctions_function" "ratelimiter" {
     url =   "https://source.developers.google.com/projects/${var.project_id}/repos/ratelimiter/revisions/${var.source_repo_sha}"
   }
 
+  # TODO I had an issue with this field where the deploy completed without errors, but didn't set this option on the function.
+  #  I ended up setting it with gcloud.
   vpc_connector = "projects/${var.project_id}/locations/${var.region}/connectors/${google_vpc_access_connector.connector.name}"
 
   environment_variables = {
