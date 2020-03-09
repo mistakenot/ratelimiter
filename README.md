@@ -27,3 +27,4 @@ The service exposes a REST api described in the [Openapi](./api/openapi.yaml) do
 
 - There are a few `TODO`'s in the code base for small code improvements. (`grep -r TODO .`)
 - Functions are deployed to public endpoints, without IAM authentication.
+- Cloud functions have a warm up time that can sometimes be a few seconds. This could be unsuitable in production if consistent latency is important.
