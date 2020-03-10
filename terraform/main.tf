@@ -4,9 +4,14 @@ terraform {
   }
 }
 
+data "google_client_openid_userinfo" "me" {
+}
+
 module "ratelimiter" {
-    source = "./ratelimiter"
-    project_id = "${var.project_id}"
-    region = "us-central1"
-    source_repo_sha = "${var.source_repo_sha}"
+  source = "./ratelimiter"
+  project_id = var.project_id
+  region = var.region
+  source_repo_sha = var.source_repo_sha
+  deployer_label = data.google_client_openid_userinfo.me.email
+  environment_label = var.environment
 }

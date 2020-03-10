@@ -16,4 +16,18 @@ test -f ./makefile || {
     exit 1
 }
 
-terraform apply ./terraform
+# Environment variable allows us to use tfvar files to differentiate between different environments.
+test -n "$ENVIRONMENT" || {
+    echo "Set the ENVIRONMENT variable to correspond to a file in ./terraform/environments."
+    exit 1
+}
+
+ENVIRONMENT_FILE="terraform/environments/$ENVIRONMENT.tfvars"
+
+test -f "$ENVIRONMENT_FILE" || {
+    echo "Cannot find file $ENVIRONMENT_FILE."
+    echo "Please ensure that the ENVIRONMENT variable is correct."
+    exit 1
+}
+
+terraform apply -var-file="$ENVIRONMENT_FILE" ./terraform

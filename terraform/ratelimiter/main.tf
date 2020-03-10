@@ -1,19 +1,25 @@
 provider "google" {
-  project     = "${var.project_id}"
-  region      = "${var.region}"
+  project     = var.project_id
+  region      = var.region
   version     = "~> 3.11"
 }
 
 resource "google_redis_instance" "ratelimiter_redis" {
   name           = "ratelimiter-redis"
-  region         = "${var.region}"
+  region         = var.region
   memory_size_gb = 1
+
+  labels = {
+    terraform = "true"
+    environment = var.environment_label
+    deployer = var.deployer_label
+  }
 }
 
 # Required to access Redis
 resource "google_vpc_access_connector" "connector" {
   name          = "ratelimiter"
-  region        = "${var.region}"
+  region        = var.region
   ip_cidr_range = "10.8.0.0/28"
   network       = "default"
 }
@@ -30,19 +36,25 @@ resource "google_cloudfunctions_function" "ratelimiter" {
 
   # TODO I had an issue with this field where the deploy completed without errors, but didn't set this option on the function.
   #  I ended up setting it with gcloud.
-  vpc_connector = "projects/${var.project_id}/locations/${var.region}/connectors/${google_vpc_access_connector.connector.name}"
+  vpc_connector = google_vpc_access_connector.connector.name
 
   environment_variables = {
     REDIS_URL = "${google_redis_instance.ratelimiter_redis.host}:${google_redis_instance.ratelimiter_redis.port}"
-    MAX_REQUESTS_IN_PERIOD = "${var.max_requests_in_period}"
-    PERIOD_DURATION_IN_SECONDS = "${var.period_duration_seconds}"
+    MAX_REQUESTS_IN_PERIOD = var.max_requests_in_period
+    PERIOD_DURATION_IN_SECONDS = var.period_duration_seconds
+  }
+
+  labels = {
+    terraform = "true"
+    environment = var.environment_label
+    deployer = var.deployer_label
   }
 }
 
 # TODO Public access. 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
-  region         = "${var.region}"
-  cloud_function = "${google_cloudfunctions_function.ratelimiter.name}"
+  region         = var.region
+  cloud_function = google_cloudfunctions_function.ratelimiter.name
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
 }
