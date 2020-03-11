@@ -12,6 +12,6 @@ module "ratelimiter" {
   project_id = var.project_id
   region = var.region
   source_repo_sha = var.source_repo_sha
-  deployer_label = data.google_client_openid_userinfo.me.email
+  deployer_label = replace(data.google_client_openid_userinfo.me.email, "/\\W/", "-")
   environment_label = var.environment
 }
